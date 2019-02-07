@@ -12,7 +12,6 @@ public class Producto implements Serializable{
 	
 	//CONSTRUCTOR
 	public Producto(int idProduct, String nameProduct, double price) {
-		super();
 		this.idProduct = idProduct;
 		this.nameProduct = nameProduct;
 		this.price = price;

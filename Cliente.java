@@ -6,33 +6,38 @@ public class Cliente implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private int idCustomer;  //ide de cliente
+	//private int idCustomer;  //id de cliente
 	private String nameCustomer; // nombre
-	private String addressPostalCode; // direccion postal
+	private String address; // direccion 
+	private String postalCode; // codigo postal
 	private String email; // correo
 	private String phone; // telefono
 	
-	//CONSTRUCTOR
-	public Cliente(int idCustomer, String name, String addressPostalCode, String email, String phone) {
-		super();
-		this.idCustomer = idCustomer;
-		this.nameCustomer = name;
-		this.addressPostalCode = addressPostalCode;
+	//CONSTRUCTORES
+	public Cliente() {
+
+	}
+
+	public Cliente(String nameCustomer, String address, String postalCode, String email, String phone) {
+		this.nameCustomer = nameCustomer;
+		this.address = address;
+		this.postalCode = postalCode;
 		this.email = email;
 		this.phone = phone;
 	}
 
+	
 	//SETTER Y GETTER
-	public int getIdCustomer() {
-		return idCustomer;
-	}
-
 	public String getNameCustomer() {
 		return nameCustomer;
 	}
 
-	public String getAddressPostalCode() {
-		return addressPostalCode;
+	public String getAddress() {
+		return address;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
 	}
 
 	public String getEmail() {
@@ -43,16 +48,16 @@ public class Cliente implements Serializable{
 		return phone;
 	}
 
-	public void setIdCustomer(int idCustomer) {
-		this.idCustomer = idCustomer;
-	}
-
 	public void setNameCustomer(String nameCustomer) {
 		this.nameCustomer = nameCustomer;
 	}
 
-	public void setAddressPostalCode(String addressPostalCode) {
-		this.addressPostalCode = addressPostalCode;
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 
 	public void setEmail(String email) {
@@ -62,21 +67,30 @@ public class Cliente implements Serializable{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
 	
-
-
 	//METODOS
 	@Override
 	public String toString() {
-		return "Id Customer: " + idCustomer + 
-				"\nName: " + nameCustomer + 
-				"\nDireccion postal: " + addressPostalCode + 
-				"\nEmail: " + email + 
-				"\nPhone=" + phone;
+		return "Nombre del cliente: " + nameCustomer + 
+				"\nDireccion: " + address + 
+				"\nCodigo postal: " + postalCode + 
+				"\nCorreo: " + email + 
+				"\nTelefono: " + phone;
 	}
 	
 	
 	
+	
+
+
+
+
+	
+
+
+	
+
 	
 
 }
