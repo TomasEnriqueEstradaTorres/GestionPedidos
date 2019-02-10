@@ -6,7 +6,6 @@ public class Cliente implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	//private int idCustomer;  //id de cliente
 	private String nameCustomer; // nombre
 	private String address; // direccion 
 	private String postalCode; // codigo postal
@@ -80,17 +79,4 @@ public class Cliente implements Serializable{
 	}
 	
 	
-	
-	
-
-
-
-
-	
-
-
-	
-
-	
-
 }

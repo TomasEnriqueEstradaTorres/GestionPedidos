@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class ConectarBaseDatos {
+public class ConectarBaseDatosCliente {
 	
 	private String protocolo; // esto es la libreria necesaria para la conexion
 	private String EndPoint; // esto es el host o lugar donde esta ubicada la base de datos, sea local o remota
@@ -20,13 +20,12 @@ public class ConectarBaseDatos {
 	
 	private Connection connection;  //Realizara la conexion con la base de datos
 	private Statement statement; // Sirve para procesar una sentencia SQL estática
-	private ResultSet resultSet;
-	private PreparedStatement preparedStatement;
+	private ResultSet resultSet; // Sirve para hacer consultas estaticas
+	private PreparedStatement preparedStatement; // sirve para hacer consultas creadas
 	
 	//CONSTRUCTOR
-	public ConectarBaseDatos() {
+	public ConectarBaseDatosCliente() {
 		this.protocolo = "jdbc:mysql://"; 
-		//this.EndPoint = "gestionpedidos.cdsbcgjkn64i.us-east-1.rds.amazonaws.com:"; 
 		this.EndPoint = "localhost:"; 
 		this.puerto = "3306/";
 		this.baseDatos = "gestion_pedidos";
@@ -35,7 +34,6 @@ public class ConectarBaseDatos {
 		this.user = "root"; 
 		this.password = "yeialel";
 	}
-	// Connection miConexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/alumnes", "root", "yeialel");
 	
 	//SETTER Y GETTER
 	public String getUrl() {
@@ -86,15 +84,21 @@ public class ConectarBaseDatos {
 		this.resultSet = resultSet;
 	}
 	
-	
-	
+	public PreparedStatement getPreparedStatement() {
+		return preparedStatement;
+	}
 
+	public void setPreparedStatement(PreparedStatement preparedStatement) {
+		this.preparedStatement = preparedStatement;
+	}
+	
+	
 	//METODOS
 
 	// guardara un cliente en la base de datos
 	public void guardarCliente(Cliente cliente) {
 		try {
-			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
+			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword()); // realiza la conexion
 			preparedStatement = connection.prepareStatement("INSERT INTO cliente(nombre, direccion, codigo_postal, email, telefono) VALUES(?,?,?,?,?)");
 			//recibe los datos del objeto cliente
 			preparedStatement.setString(1, cliente.getNameCustomer());
@@ -109,13 +113,13 @@ public class ConectarBaseDatos {
 			System.out.println("\nDatos guardados correctamente");
 			
 		} catch (SQLException e) {
-			System.out.println("No se encuentra la base de datos");
+			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
 		}	
 	}
 
 
-	// mostrada toda la lista de los clientes
+	// mostrara toda la lista de los clientes
 	public void mostrarClientes() {
 		String consulta = "SELECT * FROM cliente";
 		try {
@@ -127,7 +131,7 @@ public class ConectarBaseDatos {
 			while (resultSet.next()) {  
 				/** mientras alla un siguente registro mas adelante de donde esta el cursor, esto se ejecutara.
 				 * Los nombres de los campos deben de ser iguales a los que estan en la BD   */
-				System.out.println(resultSet.getString("id")  + ": " + 
+				System.out.println(resultSet.getString("id")  + " | " + 
 								   resultSet.getString("nombre") + " - " +
 								   resultSet.getString("direccion")  + " - " + 
 								   resultSet.getString("codigo_postal" ) + " - " + 
@@ -138,7 +142,7 @@ public class ConectarBaseDatos {
 			statement.close();
 			connection.close();
 		} catch (SQLException e) {
-			System.out.println("No se encuentra la base de datos");
+			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
 		}
 	}
@@ -161,10 +165,10 @@ public class ConectarBaseDatos {
 								   resultSet.getString("telefono"));
 			}
 			resultSet.close();
-			statement.close();
+			//statement.close();
 			connection.close();
 		} catch (SQLException e) {
-			System.out.println("No se encuentra la base de datos");
+			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
 		}
 	}
@@ -183,26 +187,10 @@ public class ConectarBaseDatos {
 			statement.close();
 			connection.close();
 		} catch (SQLException e) {
-			System.out.println("No se encuentra la base de datos");
+			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
 		}
 	}
 
-
-
 	
-	
-	
-	
-	
-
-		
-			
-			
-	
-	
-	
-	
-
-
 }

@@ -10,46 +10,85 @@ import java.time.format.DateTimeFormatter;
 public class MainPrincipal {
 
 	public static void main(String[] args) {
-		ConectarBaseDatos conectar = new ConectarBaseDatos();
+		ConectarBaseDatosCliente conectarCliente = new ConectarBaseDatosCliente();
 		Cliente cliente = new Cliente();
 		
+		ConectarBaseDatosProducto conectarProducto = new ConectarBaseDatosProducto();
+		Producto producto = new Producto();
+		
+		ConectarBaseDatosPedido conectarPedidoProducto = new ConectarBaseDatosPedido();
+		Pedido pedido = new Pedido();
+		
+		
 		int opcion;
+
         do {
         	InterfazUsuario.mostrarMenuPrincipal();     	
         	opcion = InterfazUsuario.elegirOpcion();
             switch (opcion) {
-                case InterfazUsuario.CREAR_CLIENTE:
+                case InterfazUsuario.CREAR_CLIENTE:  // 1
                 	//Aqui se agregara un cliente en la base de datos
                 	cliente = InterfazUsuario.crearCliente();
-                	conectar.guardarCliente(cliente);
+                	conectarCliente.guardarCliente(cliente);
                     break;
                     
-                case InterfazUsuario.VER_CLIENTES:
+                case InterfazUsuario.VER_CLIENTES:  // 2
                 	//Mostrara la lista de clientes de la base de datos
-                	conectar.mostrarClientes();
+                	conectarCliente.mostrarClientes();
+                    break;
+                
+                case InterfazUsuario.BUSCAR_CLIENTE:  // 3
+                	//Buscara un cliente por nombre
+                	String nombreCliente = InterfazUsuario.buscarCliente();
+                	conectarCliente.buscarCliente(nombreCliente);
+                    break;
+                    
+                case InterfazUsuario.ELIMINAR_CLIENTE:  // 4
+                	//Elimina un cliente de la base de datos
+                	String idCliente = InterfazUsuario.eliminarCliente();
+                	conectarCliente.eliminarCliente(idCliente);
+                    break;
+                    
+                case InterfazUsuario.CREAR_PRODUCTO:  // 5
+                	//Aqui se ingresara un producto a la base de datos
+                	producto = InterfazUsuario.ingresarProducto();
+                	conectarProducto.guardarProducto(producto);
+                    break;
+   
+                case InterfazUsuario.VER_PRODUCTOS:  // 6
+                	//Aqui se mostrara los productos de la base de datos
+                	conectarProducto.mostrarProductos();
+                    break;
+                
+                case InterfazUsuario.CREAR_PEDIDO:  // 7
+                	pedido = InterfazUsuario.crearPedido();
+                	conectarPedidoProducto.crearPedido(pedido); // crea el pedido
+                	//obtiene el id del pedido creado
+                	String id_pedido = conectarPedidoProducto.ultimoIdPedidoIngresado();
+                	
+                	String nombre_product = InterfazUsuario.buscarNombreProducto();
+                	conectarPedidoProducto.buscarProducto(nombre_product); // devolvera el datos del producto
+                	
+                	String id_producto = InterfazUsuario.ingresarIdProducto();
+                	// falta hacer que se repita
+                	conectarPedidoProducto.cargarListaPedido(id_pedido, id_producto);
+                	
+                
+                	
+                    break;
+                    
+                case InterfazUsuario.BUSCAR_PEDIDO_ID:  // 8
+              
+                	
+                	
+                    break;
+                    
+                case InterfazUsuario.BUSCAR_PEDIDO_CLIENTE:  // 9
+                	
+                	
                 	
                     break;
                 
-                case InterfazUsuario.BUSCAR_CLIENTE:
-                	//Buscara un cliente por nombre
-                	String nombreCliente = InterfazUsuario.buscarCliente();
-                	conectar.buscarCliente(nombreCliente);
-                    
-                    break;
-                    
-                case InterfazUsuario.ELIMINAR_CLIENTE:
-                	//Elimina un cliente de la base de datos
-                	String idCliente = InterfazUsuario.eliminarCliente();
-                	conectar.eliminarCliente(idCliente);
-                    break;
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
                 case InterfazUsuario.SALIR:
                 	
     	

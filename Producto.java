@@ -6,32 +6,27 @@ public class Producto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private int idProduct; //id del producto
 	private String nameProduct;// nombre del producto
 	private double price; // precio del producto
 	
-	//CONSTRUCTOR
-	public Producto(int idProduct, String nameProduct, double price) {
-		this.idProduct = idProduct;
+	//CONSTRUCTORES
+	public Producto() {
+	
+	}
+
+	public Producto(String nameProduct, double price) {
 		this.nameProduct = nameProduct;
 		this.price = price;
 	}
 
+	
 	//SETTER Y GETTER
-	public int getIdProduct() {
-		return idProduct;
-	}
-
 	public String getNameProduct() {
 		return nameProduct;
 	}
 
 	public double getPrice() {
 		return price;
-	}
-
-	public void setIdProduct(int idProduct) {
-		this.idProduct = idProduct;
 	}
 
 	public void setNameProduct(String nameProduct) {
@@ -42,16 +37,12 @@ public class Producto implements Serializable{
 		this.price = price;
 	}
 
+	
 	//METODOS
 	@Override
 	public String toString() {
-		return "Id Product: " + idProduct + 
-				"\nProduct Name: " + nameProduct + 
-				"\nPrice: " + price;
+		return "Nombre del producto: " + nameProduct + 
+				"\nPrecio: " + price;
 	}
-	
-	
-	
-	
 
 }

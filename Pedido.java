@@ -1,33 +1,46 @@
 package uF6.ejercicios.practica2.GestionPedidos;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 public class Pedido implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private int idOrder; // id del pedido
-	private String customerNameOrder; // nombre del cliente en el pedido
+	LocalDateTime localDateTime;
+	
+	private String idCustomer;  // id del cliente ingresado por busqueda
+	private String customerOrder; // nombre del cliente en el pedido ingresado por busqueda
 	private String date; // fecha
 	private String hour; // hora
 	private HashMap<String, Integer> productQuantity;  // cantidad de producto clave=nombre:valor=cantidad
 	
-	//CONSTRUCTOR
-	public Pedido(int idOrder, String customerNameOrder, String date, String hour) {
-		this.idOrder = idOrder;
-		this.customerNameOrder = customerNameOrder;
-		this.date = date;
-		this.hour = hour;
-		this.productQuantity = new HashMap<String, Integer>();
+	
+	//CONSTRUCTORES
+	public Pedido() {
+
 	}
 
-	public int getIdOrder() {
-		return idOrder;
+	public Pedido(String idCustomer, String customerOrder) {
+		this.idCustomer = idCustomer;
+		this.customerOrder = customerOrder;
+		this.date = datoFecha();
+		this.hour = datoHora();
+	}
+	
+	//SETTER Y GETTER
+	public LocalDateTime getLocalDateTime() {
+		return localDateTime;
 	}
 
-	public String getCustomerNameOrder() {
-		return customerNameOrder;
+	public String getIdCustomer() {
+		return idCustomer;
+	}
+
+	public String getCustomerOrder() {
+		return customerOrder;
 	}
 
 	public String getDate() {
@@ -42,12 +55,16 @@ public class Pedido implements Serializable{
 		return productQuantity;
 	}
 
-	public void setIdOrder(int idOrder) {
-		this.idOrder = idOrder;
+	public void setLocalDateTime(LocalDateTime localDateTime) {
+		this.localDateTime = localDateTime;
 	}
 
-	public void setCustomerNameOrder(String customerNameOrder) {
-		this.customerNameOrder = customerNameOrder;
+	public void setIdCustomer(String idCustomer) {
+		this.idCustomer = idCustomer;
+	}
+
+	public void setCustomerOrder(String customerOrder) {
+		this.customerOrder = customerOrder;
 	}
 
 	public void setDate(String date) {
@@ -63,16 +80,62 @@ public class Pedido implements Serializable{
 	}
 	
 	
+	//METODOS
+	private String datoFecha() {
+		//sirve para poner la fecha definida por el sistema
+		localDateTime = LocalDateTime.now();
+		DateTimeFormatter fecha = DateTimeFormatter.ofPattern("dd/LL/yyyy");
+		String datoFecha = localDateTime.format(fecha);
+		
+		return datoFecha;
+	}
+	
+	private String datoHora() {
+		//sirve para poner la hora definida por el sistema
+		localDateTime = LocalDateTime.now();
+		DateTimeFormatter hora = DateTimeFormatter.ofPattern("hh:mm:ss");
+		String datoHora = localDateTime.format(hora);
+		
+		return datoHora;
+	}
 	
 	
+	// esto es para cuando se saque de la tabla los datos devolviendo un dato con la lista de productos
+	public HashMap<String, Integer>  obtenerProductosPedido(String nombreProducto) {
+		if (productQuantity.containsKey(nombreProducto)) {// buscara la clave
+	        //si existe la URL este aumentara la cantidad de visitas que el el valor
+			productQuantity.put(nombreProducto, productQuantity.get(nombreProducto) + 1);// si la contiene aumenta la cantidad de visista
+	    } else { // si no la agrega a la lista con su valor 1
+	    	productQuantity.put(nombreProducto, 1);
+	    }
+		return productQuantity;
+	}
 	
-	
-	
+	public void  mostrar(HashMap<String, Integer> productos) {
+		productos.forEach((producto,cantidad) -> System.out.println("Producto: " + producto + ": Cantidad: " + cantidad));
+	}
+
+
 	
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 
 /*
+//iterar un hashMap
+datos.forEach((k,v) -> System.out.println("Key: " + k + ": Value: " + v));
+visitas.forEach((k,v) -> System.out.println("Clave: " + k + ": Valor: " + v));
+
+
 public void veureVisitades() {
 	System.out.println(visitas);
 	//System.out.println("Pagina: " + visitas.keySet() + "=" + visitas.values()); 
