@@ -3,6 +3,7 @@ package uF6.ejercicios.practica2.GestionPedidos;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 
 
@@ -39,8 +40,11 @@ public class MainPrincipal {
                 
                 case InterfazUsuario.BUSCAR_CLIENTE:  // 3
                 	//Buscara un cliente por nombre
-                	String nombreCliente = InterfazUsuario.buscarCliente();
-                	conectarCliente.buscarCliente(nombreCliente);
+                	boolean siExiste = false; // sirve para verificar si existe el cliente
+                	do {// seguira preguntando mientras sea falso
+                		String nombreCliente = InterfazUsuario.buscarCliente();
+                		siExiste = conectarCliente.buscarCliente(nombreCliente);
+                	}while(siExiste == false);
                     break;
                     
                 case InterfazUsuario.ELIMINAR_CLIENTE:  // 4
@@ -61,20 +65,22 @@ public class MainPrincipal {
                     break;
                 
                 case InterfazUsuario.CREAR_PEDIDO:  // 7
-                	pedido = InterfazUsuario.crearPedido();
+                	boolean existe = false; // servira para saber si existe el producto
+                	String continuar = "s"; // para decir si queremos agregar mas prodcutos
+                	
+                	pedido = InterfazUsuario.crearPedido(); // pide los datos del cliente
                 	conectarPedidoProducto.crearPedido(pedido); // crea el pedido
                 	//obtiene el id del pedido creado
                 	String id_pedido = conectarPedidoProducto.ultimoIdPedidoIngresado();
-                	
-                	String nombre_product = InterfazUsuario.buscarNombreProducto();
-                	conectarPedidoProducto.buscarProducto(nombre_product); // devolvera el datos del producto
-                	
-                	String id_producto = InterfazUsuario.ingresarIdProducto();
-                	// falta hacer que se repita
-                	conectarPedidoProducto.cargarListaPedido(id_pedido, id_producto);
-                	
-                
-                	
+                	do {
+                		do { // seguira pidiendo el producto hasta encontrarlo
+                    		String nombre_product = InterfazUsuario.buscarNombreProducto();
+                    		existe = conectarPedidoProducto.buscarProducto(nombre_product); // devolvera el datos del producto
+    					} while (existe == false);
+                		String id_producto = InterfazUsuario.ingresarIdProducto();
+                    	conectarPedidoProducto.cargarListaPedido(id_pedido, id_producto); // carga el producto en la lista del pedido
+                    	continuar = InterfazUsuario.continuarComprando(); // verifica si quieres contuniar agregando
+					} while (continuar.equals("s"));
                     break;
                     
                 case InterfazUsuario.BUSCAR_PEDIDO_ID:  // 8

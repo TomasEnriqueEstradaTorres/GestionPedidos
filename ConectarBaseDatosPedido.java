@@ -174,7 +174,7 @@ public class ConectarBaseDatosPedido {
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			connection.close();
-			System.out.println("\nIngresar productos:");
+			System.out.println("\nContinuando...");
 		} catch (SQLException e) {
 			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
@@ -225,18 +225,27 @@ public class ConectarBaseDatosPedido {
 	}
 	
 	
-	public void buscarProducto(String nombreProducto) {		
+	public boolean buscarProducto(String nombreProducto) {		
+		boolean existe = true; // servira para saber si existe el producto
 		try { 
 			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
 			preparedStatement = connection.prepareStatement("SELECT * FROM producto WHERE nombre = ?;");
 			preparedStatement.setString(1, nombreProducto);
 			resultSet = preparedStatement.executeQuery();
-			System.out.println("\nCLIENTE ENCONTRADO");
-			while (resultSet.next()) {  
-				System.out.println(resultSet.getString("id")  + ": " + 
-								   resultSet.getString("nombre") + " - " +
-								   resultSet.getString("precio"));
-			}
+			
+			
+			if (resultSet.first()) { // verifica si existe el cliente
+				resultSet.beforeFirst();// volviendo a la fila anterior
+				while (resultSet.next()) {  // si lo hay imprime el resultado
+					System.out.println("\n\tPRODUCTO ENCONTRADO");
+					System.out.println(resultSet.getString("id")  + ": " + 
+							   resultSet.getString("nombre") + " - " +
+							   resultSet.getString("precio"));
+				}
+			} else { // si no lo hay aparece este aviso
+				System.out.println("\n\tNO SE ENCUENTA EL PRODUCTO");
+				existe = false;
+			}			
 			resultSet.close();
 			//statement.close();
 			connection.close();
@@ -244,6 +253,7 @@ public class ConectarBaseDatosPedido {
 			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
 		}
+		return existe;
 	}
 	
 	

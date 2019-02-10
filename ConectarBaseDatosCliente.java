@@ -149,20 +149,29 @@ public class ConectarBaseDatosCliente {
 
 	
 	// buscara un cliente por su nombre completo
-	public void buscarCliente(String nombreCliente) {		
+	public boolean buscarCliente(String nombreCliente) {	
+		boolean existe = true; // servira para saber si existe el cliente
+		
 		try { 
 			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
 			preparedStatement = connection.prepareStatement("SELECT * FROM cliente WHERE nombre = ?;");
 			preparedStatement.setString(1, nombreCliente);
-			resultSet = preparedStatement.executeQuery();
-			System.out.println("\nCLIENTE ENCONTRADO");
-			while (resultSet.next()) {  
-				System.out.println(resultSet.getString("id")  + ": " + 
-								   resultSet.getString("nombre") + " - " +
-								   resultSet.getString("direccion")  + " - " + 
-								   resultSet.getString("codigo_postal" ) + " - " + 
-								   resultSet.getString("email") + " - " + 
-								   resultSet.getString("telefono"));
+			resultSet = preparedStatement.executeQuery();			
+			
+			if (resultSet.first()) { // verifica si existe el cliente
+				resultSet.beforeFirst();// volviendo a la fila anterior
+				while (resultSet.next()) {  // si lo hay imprime el resultado
+					System.out.println("\n\tCLIENTE ENCONTRADO");
+					System.out.println(resultSet.getString("id")  + ": " + 
+									   resultSet.getString("nombre") + " - " +
+									   resultSet.getString("direccion")  + " - " + 
+									   resultSet.getString("codigo_postal" ) + " - " + 
+									   resultSet.getString("email") + " - " + 
+									   resultSet.getString("telefono"));
+				}
+			} else { // si no lo hay aparece este aviso
+				System.out.println("\n\tNO SE ENCUENTA EL CLIENTE");
+				existe = false;
 			}
 			resultSet.close();
 			//statement.close();
@@ -171,6 +180,7 @@ public class ConectarBaseDatosCliente {
 			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
 		}
+		return existe;
 	}
 
 
@@ -181,9 +191,9 @@ public class ConectarBaseDatosCliente {
 			statement = connection.createStatement();
 			
 			String consultaBorrado =  "DELETE FROM cliente WHERE id = " + idCliente;
-			
 			statement.executeUpdate(consultaBorrado);
 			System.out.println("\nCLIENTE BORRADO");
+
 			statement.close();
 			connection.close();
 		} catch (SQLException e) {

@@ -122,12 +122,15 @@ public class InterfazUsuario {
     //--------------------------------------------------------------------------------------------
     // funciones para realizar operaciones con el pedido
     public static Pedido crearPedido() {
-    	
+    	boolean siExiste = false; // servira para saber si existe el cliente
+    	boolean continuar = false;
     	ConectarBaseDatosCliente cliente = new ConectarBaseDatosCliente();
-    	System.out.println("\nBuscar cliente");
-    	String clienteEncontrado = buscarCliente();
-    	cliente.buscarCliente(clienteEncontrado); //mostrara el cliente buscado para copiar sus datos
-        	
+    	do {
+    		System.out.println("\nBuscar cliente");
+        	String clienteEncontrado = buscarCliente();
+        	siExiste = cliente.buscarCliente(clienteEncontrado); //mostrara el cliente buscado para copiar sus datos
+    	}while(siExiste == false);
+
     	System.out.print("\nId de cliente: ");
     	String  id_Cliente = sc.nextLine();
 
@@ -153,6 +156,13 @@ public class InterfazUsuario {
     	String id_producto = sc.nextLine();
     	
     	return id_producto;	
+    }
+    
+    public static String continuarComprando() {
+    	System.out.print("Quiere agregar mas productos s o n: ");
+    	String continuar = sc.nextLine();
+    	
+        return continuar; 
     }
     
     
