@@ -84,7 +84,7 @@ public class InterfazUsuario {
     }
     
     
-    public static String buscarCliente() {    	
+    public static String buscarClienteNombre() {    	
     	System.out.print("\nNombre del cliente: ");
     	String nombreCliente = sc.nextLine();
     	
@@ -122,23 +122,21 @@ public class InterfazUsuario {
     //--------------------------------------------------------------------------------------------
     // funciones para realizar operaciones con el pedido
     public static Pedido crearPedido() {
-    	boolean siExiste = false; // servira para saber si existe el cliente
-    	boolean continuar = false;
+    	boolean siExiste = false; // servira para saber si existe el cliente    	
+    	String[] datosDevueltos = new String[3]; // recive 3 valores para crear el pedido
+    	
     	ConectarBaseDatosCliente cliente = new ConectarBaseDatosCliente();
     	do {
     		System.out.println("\nBuscar cliente");
-        	String clienteEncontrado = buscarCliente();
-        	siExiste = cliente.buscarCliente(clienteEncontrado); //mostrara el cliente buscado para copiar sus datos
+        	String clienteBuscado = InterfazUsuario.buscarClienteNombre();
+        	datosDevueltos = cliente.buscarCliente(clienteBuscado);
+        	siExiste = Boolean.valueOf(datosDevueltos[0]);	
     	}while(siExiste == false);
-
-    	System.out.print("\nId de cliente: ");
-    	String  id_Cliente = sc.nextLine();
-
-    	System.out.print("\nNombre: ");
-    	String nombreCliente = sc.nextLine();
-    	
+   	
+    	String id_Cliente = datosDevueltos[1];
+    	String nombreCliente = datosDevueltos[2];
     	Pedido pedido =  new Pedido(id_Cliente, nombreCliente);
-    	
+
     	return pedido;
     }
     
@@ -159,12 +157,19 @@ public class InterfazUsuario {
     }
     
     public static String continuarComprando() {
-    	System.out.print("Quiere agregar mas productos s o n: ");
+    	System.out.print("\nQuiere agregar mas productos s o n: ");
     	String continuar = sc.nextLine();
     	
         return continuar; 
     }
     
+    
+    public static String consultarPedidoId() {
+    	System.out.print("\nIngrese el id del pedido: ");
+    	String idPedido = sc.nextLine();
+    	
+        return idPedido; 
+    }
     
     
     

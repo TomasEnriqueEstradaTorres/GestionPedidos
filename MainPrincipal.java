@@ -41,9 +41,11 @@ public class MainPrincipal {
                 case InterfazUsuario.BUSCAR_CLIENTE:  // 3
                 	//Buscara un cliente por nombre
                 	boolean siExiste = false; // sirve para verificar si existe el cliente
+                	String[] datosDevueltos = new String[1]; // recirira un dato para poder salir del bucle
                 	do {// seguira preguntando mientras sea falso
-                		String nombreCliente = InterfazUsuario.buscarCliente();
-                		siExiste = conectarCliente.buscarCliente(nombreCliente);
+                		String nombreCliente = InterfazUsuario.buscarClienteNombre();
+                		datosDevueltos = conectarCliente.buscarCliente(nombreCliente);	
+                		siExiste = Boolean.valueOf(datosDevueltos[0]);
                 	}while(siExiste == false);
                     break;
                     
@@ -81,11 +83,13 @@ public class MainPrincipal {
                     	conectarPedidoProducto.cargarListaPedido(id_pedido, id_producto); // carga el producto en la lista del pedido
                     	continuar = InterfazUsuario.continuarComprando(); // verifica si quieres contuniar agregando
 					} while (continuar.equals("s"));
+                	System.out.println("\n\tPEDIDO GUARDADO");
                     break;
                     
                 case InterfazUsuario.BUSCAR_PEDIDO_ID:  // 8
-              
                 	
+                	String idPedido = InterfazUsuario.consultarPedidoId();
+                	conectarPedidoProducto.consultaPedido(idPedido);
                 	
                     break;
                     

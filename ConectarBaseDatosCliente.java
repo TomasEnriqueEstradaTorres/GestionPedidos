@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
 public class ConectarBaseDatosCliente {
 	
 	private String protocolo; // esto es la libreria necesaria para la conexion
@@ -22,6 +23,9 @@ public class ConectarBaseDatosCliente {
 	private Statement statement; // Sirve para procesar una sentencia SQL estática
 	private ResultSet resultSet; // Sirve para hacer consultas estaticas
 	private PreparedStatement preparedStatement; // sirve para hacer consultas creadas
+
+	protected String[] datos = new String[3]; // sirve para los valores devueltos en la funcion buscarCliente
+
 	
 	//CONSTRUCTOR
 	public ConectarBaseDatosCliente() {
@@ -93,6 +97,15 @@ public class ConectarBaseDatosCliente {
 	}
 	
 	
+	public String[] getDatos() {
+		return datos;
+	}
+
+	public void setDatos(String[] datos) {
+		this.datos = datos;
+	}
+
+
 	//METODOS
 
 	// guardara un cliente en la base de datos
@@ -146,11 +159,12 @@ public class ConectarBaseDatosCliente {
 			e.printStackTrace();
 		}
 	}
-
+	
 	
 	// buscara un cliente por su nombre completo
-	public boolean buscarCliente(String nombreCliente) {	
+	public String[] buscarCliente(String nombreCliente) {	
 		boolean existe = true; // servira para saber si existe el cliente
+		String idRecibido = null, nombreRecibido = null, direccionRecibido = null, cpPostalRecibido = null, emailRecibido = null, telfRecibido = null;
 		
 		try { 
 			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
@@ -162,17 +176,30 @@ public class ConectarBaseDatosCliente {
 				resultSet.beforeFirst();// volviendo a la fila anterior
 				while (resultSet.next()) {  // si lo hay imprime el resultado
 					System.out.println("\n\tCLIENTE ENCONTRADO");
-					System.out.println(resultSet.getString("id")  + ": " + 
-									   resultSet.getString("nombre") + " - " +
-									   resultSet.getString("direccion")  + " - " + 
-									   resultSet.getString("codigo_postal" ) + " - " + 
-									   resultSet.getString("email") + " - " + 
-									   resultSet.getString("telefono"));
+					
+					idRecibido = resultSet.getString("id"); 
+					nombreRecibido = resultSet.getString("nombre");
+					direccionRecibido = resultSet.getString("direccion");
+					cpPostalRecibido = resultSet.getString("codigo_postal" );
+					emailRecibido = resultSet.getString("email");
+					telfRecibido = resultSet.getString("telefono"); 
+					
+					System.out.println(idRecibido + ": " + 
+									   nombreRecibido + " - " + 
+							           direccionRecibido  + " - " + 
+									   cpPostalRecibido  + " - " + 
+									   emailRecibido  + " - " + 
+									   telfRecibido);
 				}
 			} else { // si no lo hay aparece este aviso
 				System.out.println("\n\tNO SE ENCUENTA EL CLIENTE");
 				existe = false;
-			}
+			}	
+			// esto seran los datos devueltos necesarios para crear un pedido y para la busqueda de clientes
+			datos[0] = String.valueOf(existe);
+			datos[1] = idRecibido;
+			datos[2] = nombreRecibido;
+			
 			resultSet.close();
 			//statement.close();
 			connection.close();
@@ -180,7 +207,7 @@ public class ConectarBaseDatosCliente {
 			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
 		}
-		return existe;
+		return datos;
 	}
 
 
@@ -202,5 +229,7 @@ public class ConectarBaseDatosCliente {
 		}
 	}
 
+	
+	
 	
 }

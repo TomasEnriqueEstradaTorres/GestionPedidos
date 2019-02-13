@@ -103,7 +103,7 @@ public class Pedido implements Serializable{
 	// esto es para cuando se saque de la tabla los datos devolviendo un dato con la lista de productos
 	public HashMap<String, Integer>  obtenerProductosPedido(String nombreProducto) {
 		if (productQuantity.containsKey(nombreProducto)) {// buscara la clave
-	        //si existe la URL este aumentara la cantidad de visitas que el el valor
+	        //si existe el nombre de producto este aumentara la cantidad de visitas que el el valor
 			productQuantity.put(nombreProducto, productQuantity.get(nombreProducto) + 1);// si la contiene aumenta la cantidad de visista
 	    } else { // si no la agrega a la lista con su valor 1
 	    	productQuantity.put(nombreProducto, 1);
