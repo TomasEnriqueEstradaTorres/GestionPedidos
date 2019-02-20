@@ -24,7 +24,7 @@ public class ConectarBaseDatosCliente {
 	private ResultSet resultSet; // Sirve para hacer consultas estaticas
 	private PreparedStatement preparedStatement; // sirve para hacer consultas creadas
 
-	protected String[] datos = new String[3]; // sirve para los valores devueltos en la funcion buscarCliente
+	protected String[] datosCliente = new String[3]; // sirve para los valores devueltos en la funcion buscarCliente
 
 	
 	//CONSTRUCTOR
@@ -98,11 +98,11 @@ public class ConectarBaseDatosCliente {
 	
 	
 	public String[] getDatos() {
-		return datos;
+		return datosCliente;
 	}
 
 	public void setDatos(String[] datos) {
-		this.datos = datos;
+		this.datosCliente = datos;
 	}
 
 
@@ -196,9 +196,9 @@ public class ConectarBaseDatosCliente {
 				existe = false;
 			}	
 			// esto seran los datos devueltos necesarios para crear un pedido y para la busqueda de clientes
-			datos[0] = String.valueOf(existe);
-			datos[1] = idRecibido;
-			datos[2] = nombreRecibido;
+			datosCliente[0] = String.valueOf(existe);
+			datosCliente[1] = idRecibido;
+			datosCliente[2] = nombreRecibido;
 			
 			resultSet.close();
 			//statement.close();
@@ -207,7 +207,7 @@ public class ConectarBaseDatosCliente {
 			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
 		}
-		return datos;
+		return datosCliente;
 	}
 
 

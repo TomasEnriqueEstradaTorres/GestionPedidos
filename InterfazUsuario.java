@@ -140,7 +140,7 @@ public class InterfazUsuario {
     	return pedido;
     }
     
-    
+    // devuelve el nombre del producto
     public static String buscarNombreProducto() {
     	System.out.print("\nBuscar producto: ");
     	String nombre_producto = sc.nextLine();
@@ -148,13 +148,13 @@ public class InterfazUsuario {
     	return nombre_producto;	
     }
     
-    
+    /*
     public static String ingresarIdProducto() {
     	System.out.print("\ningrese el Id: ");
     	String id_producto = sc.nextLine();
     	
     	return id_producto;	
-    }
+    } */
     
     public static String continuarComprando() {
     	System.out.print("\nQuiere agregar mas productos s o n: ");

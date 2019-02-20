@@ -38,6 +38,8 @@ public class ConectarBaseDatosPedido {
 	private double totalPriceProduct; // precio total del producto
 	private double total; // total de la compra
 	
+	protected String[] datosProducto = new String[2]; // sirve para los valores devueltos en la funcion buscarCliente
+	
 	
 	//private String productName; // nombre del producto
 	//private int quantityProduct; // cantidad del producto
@@ -188,6 +190,17 @@ public class ConectarBaseDatosPedido {
 	}
 	
 
+	public String[] getDatosProducto() {
+		return datosProducto;
+	}
+
+
+	public void setDatosProducto(String[] datosProducto) {
+		this.datosProducto = datosProducto;
+	}
+	
+	
+	
 	
 	//METODOS
 	
@@ -246,7 +259,7 @@ public class ConectarBaseDatosPedido {
 			preparedStatement.executeUpdate();
 			preparedStatement.close();
 			connection.close();
-			System.out.println("El producto se ha agregado en:");
+			System.out.println("\nEl producto se ha agregado en:");
 			System.out.println("Id Pedido: " + id_pedidoLista + "\tId Porducto: " + id_productoLista);
 			//System.out.println("\nDatos guardados correctamente");
 		} catch (SQLException e) {
@@ -257,8 +270,10 @@ public class ConectarBaseDatosPedido {
 	
 	
 	//Buscara un producto por su nombre
-	public boolean buscarProducto(String nombreProducto) {		
+	public String[] buscarProducto(String nombreProducto) {		
 		boolean existe = true; // servira para saber si existe el producto
+		String idRecibido = null, nombreRecibido = null, precioRecibido = null;
+		
 		try { 
 			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
 			preparedStatement = connection.prepareStatement("SELECT * FROM producto WHERE nombre = ?;");
@@ -270,14 +285,23 @@ public class ConectarBaseDatosPedido {
 				resultSet.beforeFirst();// volviendo a la fila anterior
 				while (resultSet.next()) {  // si lo hay imprime el resultado
 					System.out.println("\n\tPRODUCTO ENCONTRADO");
-					System.out.println(resultSet.getString("id")  + ": " + 
-							   resultSet.getString("nombre") + " - " +
-							   resultSet.getString("precio"));
+					
+					idRecibido = resultSet.getString("id"); 
+					nombreRecibido = resultSet.getString("nombre");
+					precioRecibido = resultSet.getString("precio");
+					
+					System.out.println(idRecibido + ": " + 
+									   nombreRecibido + " - " + 
+									   precioRecibido);			
 				}
 			} else { // si no lo hay aparece este aviso
 				System.out.println("\n\tNO SE ENCUENTA EL PRODUCTO");
 				existe = false;
-			}			
+			}	
+			// esto seran los datos devueltos necesarios para agregar el produnto a la lista del pedido.
+			datosProducto[0] = String.valueOf(existe);
+			datosProducto[1] = idRecibido;
+	
 			resultSet.close();
 			//statement.close();
 			connection.close();
@@ -285,7 +309,7 @@ public class ConectarBaseDatosPedido {
 			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
 		}
-		return existe;
+		return datosProducto;
 	}
 	
 	
@@ -394,6 +418,9 @@ public class ConectarBaseDatosPedido {
 		
 		
 	}
+
+
+	
 
 
 

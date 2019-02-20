@@ -41,11 +41,11 @@ public class MainPrincipal {
                 case InterfazUsuario.BUSCAR_CLIENTE:  // 3
                 	//Buscara un cliente por nombre
                 	boolean siExiste = false; // sirve para verificar si existe el cliente
-                	String[] datosDevueltos = new String[1]; // recirira un dato para poder salir del bucle
+                	String[] datosDevueltosCliente = new String[1]; // recirira un dato para poder salir del bucle
                 	do {// seguira preguntando mientras sea falso
                 		String nombreCliente = InterfazUsuario.buscarClienteNombre();
-                		datosDevueltos = conectarCliente.buscarCliente(nombreCliente);	
-                		siExiste = Boolean.valueOf(datosDevueltos[0]);
+                		datosDevueltosCliente = conectarCliente.buscarCliente(nombreCliente);	
+                		siExiste = Boolean.valueOf(datosDevueltosCliente[0]);
                 	}while(siExiste == false);
                     break;
                     
@@ -69,6 +69,7 @@ public class MainPrincipal {
                 case InterfazUsuario.CREAR_PEDIDO:  // 7
                 	boolean existe = false; // servira para saber si existe el producto
                 	String continuar = "s"; // para decir si queremos agregar mas prodcutos
+                	String[] datosDevueltosProducto = new String[2]; // recirira un dato para poder salir del bucle
                 	
                 	pedido = InterfazUsuario.crearPedido(); // pide los datos del cliente
                 	conectarPedidoProducto.crearPedido(pedido); // crea el pedido
@@ -77,10 +78,10 @@ public class MainPrincipal {
                 	do {
                 		do { // seguira pidiendo el producto hasta encontrarlo
                     		String nombre_product = InterfazUsuario.buscarNombreProducto();
-                    		existe = conectarPedidoProducto.buscarProducto(nombre_product); // devolvera el datos del producto
+                    		datosDevueltosProducto = conectarPedidoProducto.buscarProducto(nombre_product); // devolvera el datos del producto
+                    		existe = Boolean.valueOf(datosDevueltosProducto[0]);  // recibe el dato de tipo boolen en string y lo cambia
     					} while (existe == false);
-                		String id_producto = InterfazUsuario.ingresarIdProducto();
-                    	conectarPedidoProducto.cargarListaPedido(id_pedido, id_producto); // carga el producto en la lista del pedido
+                    	conectarPedidoProducto.cargarListaPedido(id_pedido, datosDevueltosProducto[1]); // carga el producto en la lista del pedido
                     	continuar = InterfazUsuario.continuarComprando(); // verifica si quieres contuniar agregando
 					} while (continuar.equals("s"));
                 	System.out.println("\n\tPEDIDO GUARDADO");
