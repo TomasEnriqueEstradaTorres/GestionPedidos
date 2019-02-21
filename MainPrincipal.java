@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 
 
-
 public class MainPrincipal {
 
 	public static void main(String[] args) {
