@@ -24,8 +24,6 @@ public class ConectarBaseDatosPedido {
 	private ResultSet resultSet; // Sirve para hacer consultas estaticas
 	private PreparedStatement preparedStatement; // sirve para hacer consultas creadas
 	
-	
-	
 	private int numberOrder;  // numero de pedido
 	private String customerName; // nombre del cliente
 	private int idCustomer; // id del cliente
@@ -38,13 +36,10 @@ public class ConectarBaseDatosPedido {
 	private double totalPriceProduct; // precio total del producto
 	private double total; // total de la compra
 	
-	protected String[] datosProducto = new String[2]; // sirve para los valores devueltos en la funcion buscarCliente
+	protected String[] datosProducto = new String[2]; // sirve para los valores devueltos en la funcion buscarCliente	
 	
+	ListaPedido listaPedido = new ListaPedido();
 	
-	//private String productName; // nombre del producto
-	//private int quantityProduct; // cantidad del producto
-	//nombre del producto y cantidad
-	private HashMap<String, Integer> productNameQuantity = new HashMap<String, Integer>();  // cantidad de producto clave=nombre:valor=cantidad
 	
 	
 	//CONSTRUCTOR
@@ -179,16 +174,7 @@ public class ConectarBaseDatosPedido {
 	public void setPreparedStatement(PreparedStatement preparedStatement) {
 		this.preparedStatement = preparedStatement;
 	}
-	
-	public HashMap<String, Integer> getProductNameQuantity() {
-		return productNameQuantity;
-	}
-
-	
-	public void setProductNameQuantity(HashMap<String, Integer> productNameQuantity) {
-		this.productNameQuantity = productNameQuantity;
-	}
-	
+		
 
 	public String[] getDatosProducto() {
 		return datosProducto;
@@ -280,19 +266,14 @@ public class ConectarBaseDatosPedido {
 			preparedStatement.setString(1, nombreProducto);
 			resultSet = preparedStatement.executeQuery();
 			
-			
 			if (resultSet.first()) { // verifica si existe el cliente
 				resultSet.beforeFirst();// volviendo a la fila anterior
 				while (resultSet.next()) {  // si lo hay imprime el resultado
 					System.out.println("\n\tPRODUCTO ENCONTRADO");
-					
 					idRecibido = resultSet.getString("id"); 
 					nombreRecibido = resultSet.getString("nombre");
 					precioRecibido = resultSet.getString("precio");
-					
-					System.out.println(idRecibido + ": " + 
-									   nombreRecibido + " - " + 
-									   precioRecibido);			
+					System.out.println(idRecibido + ": " + nombreRecibido + " - " + precioRecibido);			
 				}
 			} else { // si no lo hay aparece este aviso
 				System.out.println("\n\tNO SE ENCUENTA EL PRODUCTO");
@@ -313,79 +294,31 @@ public class ConectarBaseDatosPedido {
 	}
 	
 	
-	//consultar pedido
-	
-	public void consultaPedido(String idPedido) {
-		
-										 
-		
+	//Busca los datos del cliente por medio del id del pedido
+	public void obtenerDatosClientePedido(String idPedido) {
+		String identCliente = null, nombreCliente = null, direccionCliente = null; // datos cliente
 		try {
 			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
-			preparedStatement = connection.prepareStatement("select a.id as Id_cliente, a.nombre as Cliente, a.direccion as Direccion, " + 
-                     "d.nombre as producto, d.id as Id_Producto, d.precio as Precio " + 
-                     "from cliente a" + 
-					 " join pedido b" + 
-					 " on a.id = b.id_cliente" + 
-					 " join lista_pedido_producto c" + 
-					 " on b.id = c.id_pedido" + 
-					 " join producto d" + 
-					 " on d.id = c.id_producto" + 
-					 " where b.id = ?"); 
-			
+			preparedStatement = connection.prepareStatement("select a.id as Id_cliente, a.nombre as Cliente, a.direccion as Direccion\n" + 
+															"from cliente a\n" + 
+															" join pedido b\n" + 
+															" on b.id_cliente = a.id\n" + 
+															" where b.id = ?"); 
 			preparedStatement.setString(1, idPedido);
 			resultSet = preparedStatement.executeQuery();
 			
 			if (resultSet.first()) { // verifica si existe el cliente
 				resultSet.beforeFirst();// volviendo a la fila anterior
-				System.out.println("\n\tPEDIDO ENCONTRADO");
+				System.out.println("\n\tDATO ENCONTRADO");
 				while (resultSet.next()) {  // si lo hay imprime el resultado
-					
-					System.out.println(
-							   resultSet.getString("Id_cliente") + " | " +  
-							   resultSet.getString("Cliente") + " | " +
-							   resultSet.getString("Direccion") + " | " + 
-							   resultSet.getString("Producto" ) + " | " + 
-							   resultSet.getString("Id_Producto") + " | " + 
-							   resultSet.getString("Precio"));  
-					
-					/*
-					   numberOrder = resultSet.getInt("Id_cliente");
-					   customerName = resultSet.getString("Cliente");
-					   customerAddress = resultSet.getString("Direccion");
-					   productName = resultSet.getString("Producto" ); 
-					   idProduct = resultSet.getInt("Id_Producto"); 
-					   priceProduct = resultSet.getDouble("Precio");
-					*/
-					
-					
+					identCliente = resultSet.getString("Id_cliente");
+					nombreCliente = resultSet.getString("Cliente");
+					direccionCliente = resultSet.getString("Direccion");
+					System.out.println("Id del Cliente: " + identCliente + "\nNombre: " + nombreCliente + "\nDireccion: " + direccionCliente);	
 				}
-				
-				
-				
-				/*
-				private int numberOrder;  // numero de pedido
-				private String customerName; // nombre del cliente
-				private int idCustomer; // id del cliente
-				private String customerAddress; // direccion del cliente
-
-				private int idProduct; // id del producto
-				private String productName; // nombre del producto
-				private int quantityProduct; // cantidad del producto
-				private double priceProduct; // precio del producto
-				private double totalPriceProduct; // precio total del producto
-				private double total; // total de la compra
-				*/
 			} else { // si no lo hay aparece este aviso
-				System.out.println("\n\tNO SE ENCUENTRA EL PEDIDO");
-			}
-			
-			//System.out.println(numberOrder + customerName + customerAddress + productName + idProduct + priceProduct);
-			
-			
-			
-			
-			
-			
+				System.out.println("\n\tDATO NO ENCUENTRADO");
+			}	
 		} catch (SQLException e) {
 			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
@@ -393,30 +326,69 @@ public class ConectarBaseDatosPedido {
 	}
 	
 	
-	
-	
-	// esto es para cuando se saque de la tabla los datos devolviendo un dato con la lista de productos
-	public HashMap<String, Integer>  obtenerProductosPedido(String nombreProducto) {
-		if (productNameQuantity.containsKey(nombreProducto)) {// buscara la clave
-	        //si existe el nombre de producto este aumentara la cantidad de visitas que el el valor
-			productNameQuantity.put(nombreProducto, productNameQuantity.get(nombreProducto) + 1);// si la contiene aumenta la cantidad de visista
-	    } else { // si no la agrega a la lista con su valor 1
-	    	productNameQuantity.put(nombreProducto, 1);
-	    }
-		return productNameQuantity;
+	public void obtenerListaProductos(String idPedido) { // busca los productos por medio del id del pedido
+		String datosListaProductos = null;
+		listaPedido.borrarLista();// borra la lista cada vez que se haga una nueva consuta
+		try {
+			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
+			preparedStatement = connection.prepareStatement("select d.nombre as Producto\n" + 
+															"from cliente a\n" + 
+															" join pedido b\n" + 
+															" on a.id = b.id_cliente\n" + 
+															" join lista_pedido_producto c\n" + 
+															" on b.id = c.id_pedido\n" + 
+															" join producto d\n" + 
+															" on d.id = c.id_producto\n" + 
+															" where b.id = ?"); 
+			preparedStatement.setString(1, idPedido);
+			resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.first()) { // verifica si existe el cliente
+				resultSet.beforeFirst();// volviendo a la fila anterior
+				System.out.println("\n\tPEDIDO");
+				while (resultSet.next()) {  // si lo hay imprime el resultado
+					datosListaProductos = resultSet.getString("Producto");// obtiene la lista de productos
+					listaPedido.contandoProductos(datosListaProductos);// guarda y cuenta la cantidad de un producto	
+				}
+			} else { // si no lo hay aparece este aviso
+				System.out.println("\n\tNO TIENE PEDIDO");
+			}	
+			listaPedido.mostrarConteoProductos(); // muestra el producto y la cantidad 
+		} catch (SQLException e) {
+			System.out.println("\nNo se encuentra la base de datos");
+			e.printStackTrace();
+		}	
 	}
-		
-	public void  mostrar(HashMap<String, Integer> productos) {
-		productos.forEach((producto,cantidad) -> System.out.println("Producto: " + producto + ": Cantidad: " + cantidad));
-	} 
 	
 
-	public void mostrarPrueba() {
-		
-		
-		
-		
-		
+	public void obtenerDatosPreciosProductos(String idPedido) {
+		String identCliente = null, nombreCliente = null, direccionCliente = null; // datos cliente
+		try {
+			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
+			preparedStatement = connection.prepareStatement("select a.id as Id_cliente, a.nombre as Cliente, a.direccion as Direccion\n" + 
+															"from cliente a\n" + 
+															" join pedido b\n" + 
+															" on b.id_cliente = a.id\n" + 
+															" where b.id = ?"); 
+			preparedStatement.setString(1, idPedido);
+			resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.first()) { // verifica si existe el cliente
+				resultSet.beforeFirst();// volviendo a la fila anterior
+				System.out.println("\n\tDATO ENCONTRADO");
+				while (resultSet.next()) {  // si lo hay imprime el resultado
+					identCliente = resultSet.getString("Id_cliente");
+					nombreCliente = resultSet.getString("Cliente");
+					direccionCliente = resultSet.getString("Direccion");
+					System.out.println("Id del Cliente: " + identCliente + "\nNombre: " + nombreCliente + "\nDireccion: " + direccionCliente);	
+				}
+			} else { // si no lo hay aparece este aviso
+				System.out.println("\n\tDATO NO ENCUENTRADO");
+			}	
+		} catch (SQLException e) {
+			System.out.println("\nNo se encuentra la base de datos");
+			e.printStackTrace();
+		}	
 	}
 
 

@@ -19,6 +19,8 @@ public class MainPrincipal {
 		ConectarBaseDatosPedido conectarPedidoProducto = new ConectarBaseDatosPedido();
 		Pedido pedido = new Pedido();
 		
+		ListaPedido listaPedido = new ListaPedido();
+		
 		
 		int opcion;
 
@@ -87,9 +89,16 @@ public class MainPrincipal {
                     break;
                     
                 case InterfazUsuario.BUSCAR_PEDIDO_ID:  // 8
+              
+                	//listaPedido.borrarLista();
+                	String idPedido = InterfazUsuario.consultarPedidoId(); // devuelve el id de pedido ingresado a buscar
+                	//conectarPedidoProducto.consultaPedido(idPedido); // se pasa el id encontrado
                 	
-                	String idPedido = InterfazUsuario.consultarPedidoId();
-                	conectarPedidoProducto.consultaPedido(idPedido);
+                	conectarPedidoProducto.obtenerDatosClientePedido(idPedido);
+                	conectarPedidoProducto.obtenerListaProductos(idPedido);
+                	
+                	
+                
                 	
                     break;
                     
