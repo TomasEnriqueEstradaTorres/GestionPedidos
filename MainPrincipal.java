@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-//reinicio
+//reinicio nuevo 27/02/2019
 
 public class MainPrincipal {
 
