@@ -2,8 +2,6 @@ package uF6.ejercicios.practica2.GestionPedidos;
 
 import java.util.Scanner;
 
-import com.sun.org.apache.regexp.internal.recompile;
-
 public class InterfazUsuario {
 	
 	private static Scanner sc = new Scanner(System.in);
@@ -84,7 +82,8 @@ public class InterfazUsuario {
     }
     
     
-    public static String buscarClienteNombre() {    	
+    public static String buscarClienteNombre() {    
+    	//devuelve el nombre de un cliente
     	System.out.print("\nNombre del cliente: ");
     	String nombreCliente = sc.nextLine();
     	
@@ -93,6 +92,7 @@ public class InterfazUsuario {
     
     
     public static String eliminarCliente() {
+    	//devuelve el id del cliente
     	System.out.print("\nId de cliente: ");
     	String idCliente = sc.nextLine();
 
@@ -140,23 +140,17 @@ public class InterfazUsuario {
     	return pedido;
     }
     
-    // devuelve el nombre del producto
+    
     public static String buscarNombreProducto() {
+    	// devuelve el nombre del producto
     	System.out.print("\nBuscar producto: ");
     	String nombre_producto = sc.nextLine();
     	
     	return nombre_producto;	
     }
     
-    /*
-    public static String ingresarIdProducto() {
-    	System.out.print("\ningrese el Id: ");
-    	String id_producto = sc.nextLine();
-    	
-    	return id_producto;	
-    } */
-    
-    public static String continuarComprando() {
+    public static String continuarComprando() { 
+    	// devolvera s o n para salir de un bucle 
     	System.out.print("\nQuiere agregar mas productos s o n: ");
     	String continuar = sc.nextLine();
     	
@@ -165,6 +159,7 @@ public class InterfazUsuario {
     
     
     public static String consultarPedidoId() {
+    	//devolvera un datos para buscar un pedido
     	System.out.print("\nIngrese el id del pedido: ");
     	String idPedido = sc.nextLine();
     	

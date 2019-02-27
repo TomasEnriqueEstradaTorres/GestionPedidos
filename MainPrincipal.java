@@ -1,12 +1,6 @@
 package uF6.ejercicios.practica2.GestionPedidos;
 
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
-
-//reinicio nuevo 27/02/2019
-
 public class MainPrincipal {
 
 	public static void main(String[] args) {
@@ -19,7 +13,7 @@ public class MainPrincipal {
 		ConectarBaseDatosPedido conectarPedidoProducto = new ConectarBaseDatosPedido();
 		Pedido pedido = new Pedido();
 		
-		ListaPedido listaPedido = new ListaPedido();
+	
 		
 		
 		int opcion;
@@ -51,31 +45,27 @@ public class MainPrincipal {
                     break;
                     
                 case InterfazUsuario.ELIMINAR_CLIENTE:  // 4
-                	//Elimina un cliente de la base de datos
-                	String idCliente = InterfazUsuario.eliminarCliente();
+                	String idCliente = InterfazUsuario.eliminarCliente();//Elimina un cliente de la base de datos
                 	conectarCliente.eliminarCliente(idCliente);
                     break;
                     
                 case InterfazUsuario.CREAR_PRODUCTO:  // 5
-                	//Aqui se ingresara un producto a la base de datos
-                	producto = InterfazUsuario.ingresarProducto();
+                	producto = InterfazUsuario.ingresarProducto();//Aqui se ingresara un producto a la base de datos
                 	conectarProducto.guardarProducto(producto);
                     break;
    
                 case InterfazUsuario.VER_PRODUCTOS:  // 6
-                	//Aqui se mostrara los productos de la base de datos
-                	conectarProducto.mostrarProductos();
+                	conectarProducto.mostrarProductos(); //Aqui se mostrara los productos de la base de datos
                     break;
                 
                 case InterfazUsuario.CREAR_PEDIDO:  // 7
                 	boolean existe = false; // servira para saber si existe el producto
                 	String continuar = "s"; // para decir si queremos agregar mas prodcutos
                 	String[] datosDevueltosProducto = new String[2]; // recirira un dato para poder salir del bucle
-                	
                 	pedido = InterfazUsuario.crearPedido(); // pide los datos del cliente
                 	conectarPedidoProducto.crearPedido(pedido); // crea el pedido
-                	//obtiene el id del pedido creado
-                	String id_pedido = conectarPedidoProducto.ultimoIdPedidoIngresado();
+                	String id_pedido = conectarPedidoProducto.ultimoIdPedidoIngresado();//obtiene el id del pedido creado
+                	
                 	do {
                 		do { // seguira pidiendo el producto hasta encontrarlo
                     		String nombre_product = InterfazUsuario.buscarNombreProducto();
@@ -89,28 +79,22 @@ public class MainPrincipal {
                     break;
                     
                 case InterfazUsuario.BUSCAR_PEDIDO_ID:  // 8
-              
-                	//listaPedido.borrarLista();
                 	String idPedido = InterfazUsuario.consultarPedidoId(); // devuelve el id de pedido ingresado a buscar
-                	//conectarPedidoProducto.consultaPedido(idPedido); // se pasa el id encontrado
-                	
-                	conectarPedidoProducto.obtenerDatosClientePedido(idPedido);
-                	conectarPedidoProducto.obtenerListaProductos(idPedido);
-                	
-                	
-                
-                	
+                	conectarPedidoProducto.obtenerDatosClientePedido(idPedido); // obtiene los datos del cliente que hizo el pedido
+                	conectarPedidoProducto.obtenerListaProductos(idPedido); // obtiene los productos del pedido del cliente
                     break;
                     
                 case InterfazUsuario.BUSCAR_PEDIDO_CLIENTE:  // 9
                 	
                 	
                 	
+                	
+                	
+                	
+                	
                     break;
                 
                 case InterfazUsuario.SALIR:
-                	
-    	
                     break;    
                 default:
                     System.out.println("Opcio incorrecta");

@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 
 public class ConectarBaseDatosPedido {
 	
@@ -23,24 +22,8 @@ public class ConectarBaseDatosPedido {
 	private Statement statement; // Sirve para procesar una sentencia SQL estática
 	private ResultSet resultSet; // Sirve para hacer consultas estaticas
 	private PreparedStatement preparedStatement; // sirve para hacer consultas creadas
-	
-	private int numberOrder;  // numero de pedido
-	private String customerName; // nombre del cliente
-	private int idCustomer; // id del cliente
-	private String customerAddress; // direccion del cliente
-
-	private int idProduct; // id del producto
-	private String productName; // nombre del producto
-	private int quantityProduct; // cantidad del producto
-	private double priceProduct; // precio del producto
-	private double totalPriceProduct; // precio total del producto
-	private double total; // total de la compra
-	
+		
 	protected String[] datosProducto = new String[2]; // sirve para los valores devueltos en la funcion buscarCliente	
-	
-	ListaPedido listaPedido = new ListaPedido();
-	
-	
 	
 	//CONSTRUCTOR
 	public ConectarBaseDatosPedido() {
@@ -325,71 +308,71 @@ public class ConectarBaseDatosPedido {
 		}	
 	}
 	
-	
+
 	public void obtenerListaProductos(String idPedido) { // busca los productos por medio del id del pedido
-		String datosListaProductos = null;
-		listaPedido.borrarLista();// borra la lista cada vez que se haga una nueva consuta
+		String idProdcuto = null, nombreProducto = null;
+		int cantidadProducto = 0; // la cantidad de productos
+		double precioProducto = 0.0; // precio individual de un producto
+		double total = 0.0; // Es el precio total de la cantidad de un tipo de producto
+		double iva = 0.0;
+		double precioTotalParcial = 0.0; // Es el total de la suma de todos los productos
+		double precioTotal = 0.0; // Es el precio total mas iva de todo
+		
 		try {
 			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
-			preparedStatement = connection.prepareStatement("select d.nombre as Producto\n" + 
-															"from cliente a\n" + 
-															" join pedido b\n" + 
-															" on a.id = b.id_cliente\n" + 
-															" join lista_pedido_producto c\n" + 
-															" on b.id = c.id_pedido\n" + 
-															" join producto d\n" + 
-															" on d.id = c.id_producto\n" + 
-															" where b.id = ?"); 
+			preparedStatement = connection.prepareStatement("select producto.id as Id_Producto, producto.nombre as Producto, count(producto.id) as Cantidad, producto.precio as Precio,count(producto.id)* producto.precio  as Total\n" + 
+															"from pedido\n" + 
+															" join lista_pedido_producto\n" + 
+															" on pedido.id = lista_pedido_producto.id_pedido\n" + 
+															" join producto\n" + 
+															" on producto.id = lista_pedido_producto.id_producto\n" + 
+															" where pedido.id = ?\n" + 
+															" group by producto.id"); 
 			preparedStatement.setString(1, idPedido);
 			resultSet = preparedStatement.executeQuery();
 			
 			if (resultSet.first()) { // verifica si existe el cliente
 				resultSet.beforeFirst();// volviendo a la fila anterior
-				System.out.println("\n\tPEDIDO");
+				System.out.println("\n\t\t\tPEDIDO Nº " + idPedido);
+				System.out.println("-------------------------------------------------------------");
+				System.out.format("%5s %15s %15s %10s %11s %n","Id", "Producto", "Cantidad", "Precio", "Total");// formato para el titulo
 				while (resultSet.next()) {  // si lo hay imprime el resultado
-					datosListaProductos = resultSet.getString("Producto");// obtiene la lista de productos
-					listaPedido.contandoProductos(datosListaProductos);// guarda y cuenta la cantidad de un producto	
+					idProdcuto = resultSet.getString("Id_producto");
+					nombreProducto = resultSet.getString("Producto");
+					cantidadProducto = resultSet.getInt("Cantidad");
+					precioProducto = resultSet.getDouble("Precio");
+					total = resultSet.getDouble("Total");	
+					
+					precioTotalParcial += total;
+					System.out.format("%5s %18s %8d %14.2f  %10.2f %n",idProdcuto, nombreProducto, cantidadProducto, precioProducto, total); // formato para poner los datos
 				}
+				System.out.println("-------------------------------------------------------------");
+				iva = precioTotalParcial * 0.21; // obtiene el iva
+				precioTotal = precioTotalParcial + iva; // obtiene el precio total a pagar
+				System.out.format("%50s %9.2f %n","TOTAL PARCIAL: ", precioTotalParcial); // esto es el valor total parcial
+				System.out.format("%50s %9.2f %n","IVA: ", iva); // es el impuesto
+				System.out.format("%50s %9.2f %n","PRECIO TOTAL A PAGAR: ", precioTotal); // el precio total a pagar
+				System.out.println("-------------------------------------------------------------");
 			} else { // si no lo hay aparece este aviso
 				System.out.println("\n\tNO TIENE PEDIDO");
 			}	
-			listaPedido.mostrarConteoProductos(); // muestra el producto y la cantidad 
 		} catch (SQLException e) {
 			System.out.println("\nNo se encuentra la base de datos");
 			e.printStackTrace();
 		}	
 	}
+	/*NOTAS : FORMATO PARA IMPRIMIR
+	 System.out.format("%20s %8d %10.2f  %10.2f %n", nombreProducto, cantidadProducto, precioProducto, total);
+	 %20s ==> significa que se deja 20 espacios de tipo caracter abcd
+	 %8d  ==> significa que se deja 8 espacios de tipo entero 12345
+	 %10.2f  ==> significa que deja 10 espacios de tipo decimal 0.00
+	 %n  ==> esto es el salto de linea
+	 */
+
+	
+	
 	
 
-	public void obtenerDatosPreciosProductos(String idPedido) {
-		String identCliente = null, nombreCliente = null, direccionCliente = null; // datos cliente
-		try {
-			connection = DriverManager.getConnection(getUrl(), getUser(), getPassword());
-			preparedStatement = connection.prepareStatement("select a.id as Id_cliente, a.nombre as Cliente, a.direccion as Direccion\n" + 
-															"from cliente a\n" + 
-															" join pedido b\n" + 
-															" on b.id_cliente = a.id\n" + 
-															" where b.id = ?"); 
-			preparedStatement.setString(1, idPedido);
-			resultSet = preparedStatement.executeQuery();
-			
-			if (resultSet.first()) { // verifica si existe el cliente
-				resultSet.beforeFirst();// volviendo a la fila anterior
-				System.out.println("\n\tDATO ENCONTRADO");
-				while (resultSet.next()) {  // si lo hay imprime el resultado
-					identCliente = resultSet.getString("Id_cliente");
-					nombreCliente = resultSet.getString("Cliente");
-					direccionCliente = resultSet.getString("Direccion");
-					System.out.println("Id del Cliente: " + identCliente + "\nNombre: " + nombreCliente + "\nDireccion: " + direccionCliente);	
-				}
-			} else { // si no lo hay aparece este aviso
-				System.out.println("\n\tDATO NO ENCUENTRADO");
-			}	
-		} catch (SQLException e) {
-			System.out.println("\nNo se encuentra la base de datos");
-			e.printStackTrace();
-		}	
-	}
 
 
 	

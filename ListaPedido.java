@@ -78,21 +78,8 @@ public class ListaPedido {
 		//productNameQuantity.forEach((producto, cantidad) -> System.out.println(producto + " " + cantidad));
 	}
 
-	// contara los precios para obtener el monto del pedido
-	public void contandoPreciosProductos(Double precio) {
-		if (precios.containsKey(precio)) {// buscara la clave
-			// si existe el precio de producto este aumentara la cantidad que hay de el
-			precios.put(precio, precios.get(precio) + 1);			
-		} else { // si no la agrega a la lista con su valor 1, indicando que solo hay 1
-			precios.put(precio, 1);
-		}
-	}
 	
-	
-	
-	
-	
-	
+
 	
 	
 	
